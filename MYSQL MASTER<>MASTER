@@ -1,0 +1,80 @@
+wget http://dev.mysql.com/get/mysql57-community-release-el6-7.noarch.rpm
+yum localinstall mysql57-community-release-el6-7.noarch.rpm
+yum repolist enabled | grep "mysql.*-community.*"
+yum install mysql-community-server
+chkconfig mysqld on
+/etc/init.d/mysqld start
+grep 'temporary password' /var/log/mysqld.log
+mysql -u root -p
+SET GLOBAL validate_password_policy=LOW;
+mysql_secure_installation
+mysql -u root -p
+use mysql;
+select host,user from user;
+GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY 'Umbrell@' WITH GRANT OPTION;
+flush privileges;
+vi /etc/my.cnf
+	server-id               = 1
+	log_bin                 = /var/log/mysql/mysql-bin.log
+	binlog_do_db            = example
+
+mkdir /var/log/mysql/
+touch /var/log/mysql/mysql-bin.log
+chmod a+w /var/log/mysql/
+/etc/init.d/mysqld restart
+mysql -u root -p
+create user 'replication'@'%' identified by 'slavepass';
+grant replication slave on *.* to 'replication'@'%';
+grant replication slave on *.* to 'replication'@'%' identified by 'slavepass';
+flush privileges;
+show master status;
+stop slave;
+CHANGE MASTER TO MASTER_HOST = '192.168.118.144', MASTER_USER = 'replication', MASTER_PASSWORD = 'slavepass', MASTER_LOG_FILE = 'mysql-bin.000005', MASTER_LOG_POS = 154;
+start slave;
+
+
+
+
+
+
+
+
+
+
+
+
+iptables -I INPUT -i eth0 -p tcp --destination-port 3306 -j ACCEPT
+
+CHANGE MASTER TO MASTER_HOST='192.168.118.138',
+MASTER_USER='replication',
+MASTER_PASSWORD='slavepass1',
+MASTER_LOG_FILE='mysql-bin.000005',
+MASTER_LOG_POS=106;
+
+
+CHANGE MASTER TO MASTER_HOST = '192.168.118.139', MASTER_USER = 'replication', MASTER_PASSWORD = 'slavepass', MASTER_LOG_FILE = 'mysql-bin.000003', MASTER_LOG_POS = 372;
+
+CHANGE MASTER TO MASTER_HOST = '192.168.118.144', MASTER_USER = 'replication', MASTER_PASSWORD = 'slavepass', MASTER_LOG_FILE = 'mysql-bin.000005', MASTER_LOG_POS = 154;
+
+CHANGE MASTER TO MASTER_HOST = '192.168.118.138', MASTER_USER = 'replication', MASTER_PASSWORD = 'slavepass', MASTER_LOG_FILE = 'mysql-bin.000017', MASTER_LOG_POS = 621;
+
+select Host,User,Password from user;
+
+create user 'replication'@'%' identified by 'slavepass';
+
+grant replication slave on *.* to 'replication'@'%';
+
+grant replication slave on *.* to 'replication'@% identified by 'slavepass;
+
+grant replication slave on *.* to 'replication'@192.168.118.138 identified by 'slavepass';
+
+
+flush privileges;
+
+
+CHANGE MASTER TO MASTER_HOST = '192.168.118.138', MASTER_USER = 'replication', MASTER_PASSWORD = ''slavepass2, MASTER_LOG_FILE = 'mysql-bin.00014', MASTER_LOG_POS = 120;
+
+
+create table testdb.test (`id` varchar(10));
+
+create table testdb.test01 (`id` varchar(10));
