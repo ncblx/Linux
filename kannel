@@ -1,0 +1,77 @@
+#!/bin/sh
+#
+# gateway         This shell script takes care of starting and stopping
+#                 the Kannel WAP gateway (bearer/wapbox)
+#
+# chkconfig: 2345 97 03
+# description:  Start and stop the Kannel WAP gateway used to fetch \
+#               some WML content from a Web server & compile it \
+#               into WMLC mobile phone bytecode.
+# probe: true
+ 
+# Use start-stop-daemon
+ver=1.5.0
+BBOX=/usr/local/kannel/sbin/bearerbox
+SBOX=/usr/local/kannel/sbin/smsbox
+START="/usr/local/kannel/sbin/start-stop-daemon --start --background --quiet --exec"
+STOP="/usr/local/kannel/sbin/start-stop-daemon --stop --quiet --oknodo --exec"
+CONF=/etc/kannel/kannel.conf
+LEVEL=-v\ 1
+[ $# -eq 2 ] && ver=$2
+ 
+# Source function library.
+. /lib/lsb/init-functions 
+ 
+[ -x $BBOX ] || exit 0
+
+[ -x $SBOX ] || exit 0
+
+[ -f $CONF ] || exit 0
+ 
+RETVAL=0
+
+# See how we were called.
+case "$1" in
+    start)
+    # Start daemons.
+            echo -n "Starting bearer service (gateway kannel $ver): "
+            $START $BBOX -- $LEVEL $CONF
+            RETVAL1=$?
+            sleep 1 # Sleep for a while before we try to start smsbox
+            echo
+            echo -n "Starting smsbox service (gateway kannel $ver): "
+            $START $SBOX -- $CONF
+            RETVAL2=$?
+            echo
+            echo
+            [ $RETVAL1 -eq 0 -a $RETVAL2 -eq 0 ] && touch /var/lock/subsys/gateway ||\
+            RETVAL=1
+            ;;
+      stop)
+            # Stop daemons.
+            echo -n "Shutting down smsbox (kannel $ver): "
+            $STOP $SBOX
+            RETVAL2=$?
+            echo
+            echo -n "Shutting down bearerbox (kannel $ver): "
+            $STOP $BBOX
+            RETVAL1=$?
+            echo
+            [ $RETVAL1 -eq 0 -a $RETVAL2 -eq 0 ] && rm -f /var/lock/subsys/gateway
+            echo ""
+            ;;
+      status)
+            status bearerbox
+            status smsbox
+            exit $?
+            ;;
+      restart)
+            $0 stop
+            sleep 1
+            $0 start
+            ;;
+      *)
+            echo "Usage: named {start|stop|status|restart}"
+            exit 1
+esac
+exit $RETVAL
