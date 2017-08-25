@@ -1,9 +1,7 @@
 #!/bin/bash
 #
-# WAP Gateway Check Write statistics script 
-#
-# CBOSS Copyright 2005-2006
-# Script should be started by WAP user("wap" by default), e.g. user which is responsible for processing WAP GW modules
+# WAP Gateway Check Write statistics script
+
 #
 # input parameters:
 # $1 - wapproxy ID
@@ -21,11 +19,11 @@ WP_OUTPUT="`$WAPINSTBASE/bin/wpcontrol -p -n$PROXYID`"
 
 #generate statistics filename
 FILENAME=$WAPINSTBASE/wpstat/wpstat_${SRVID}_${PROXYID}_`date '+%Y%m%d'`.log
-    
-PROXYPIDS=`ps -u $WAPUSER | grep "wapproxy" | awk '{ print $1 }'`
-RESULT_LINE="`date '+%Y-%m-%d %H:%M:%S'` "$SRVID" "$PROXYID 
 
-# for all WAP GW PID-®¢ wap gw
+PROXYPIDS=`ps -u $WAPUSER | grep "wapproxy" | awk '{ print $1 }'`
+RESULT_LINE="`date '+%Y-%m-%d %H:%M:%S'` "$SRVID" "$PROXYID
+
+# for all WAP GW PID-ï¿½ï¿½ wap gw
 for WPPID in $PROXYPIDS
 do
 
@@ -36,7 +34,7 @@ do
 
         then
 
-#  try to find out instanse mane 
+#  try to find out instanse mane
 
        NAMES_COUNT=`echo "${WP_NAMES}" | grep -c "<"`
 
@@ -61,8 +59,8 @@ do
           REAL_TPS_2=`expr $REAL_TPS \% $TIME_DELAY`
           REAL_TPS=${REAL_TPS_1}.${REAL_TPS_2}
 
-          else 
-          #  if value more that current, so WAP GW has been restarted. ’¥ªãé¥¥ §­ ç¥­¨¥ ¯¨è¥¬ ¢ ä ©«,   à¥ «ì­ë© TPS § ­ã«ï¥¬
+          else
+          #  if value more that current, so WAP GW has been restarted. ï¿½ï¿½ï¿½ï¿½é¥¥ ï¿½ï¿½ï¿½ç¥­ï¿½ï¿½ ï¿½ï¿½è¥¬ ï¿½ ä ©ï¿½, ï¿½ à¥ ï¿½ï¿½ï¿½ï¿½ï¿½ TPS ï¿½ï¿½ï¿½ï¿½ï¿½ï¥¬
           REAL_TPS=0.0
          fi
 
@@ -80,10 +78,10 @@ do
        # name names
 
          STAT_FILE_CO=$WAPINSTBASE/wpstat/ID_${PROXYID}_${INSTANSE_NAME_CO}.stat
-         STAT_FILE_CL=$WAPINSTBASE/wpstat/ID_${PROXYID}_${INSTANSE_NAME_CL}.stat 
+         STAT_FILE_CL=$WAPINSTBASE/wpstat/ID_${PROXYID}_${INSTANSE_NAME_CL}.stat
 
         if [[ -s $STAT_FILE_CO && -s $STAT_FILE_CL ]]
-        then 
+        then
         WAP_CO_REQ_OLD=`cat $STAT_FILE_CO`
         WAP_CL_REQ_OLD=`cat $STAT_FILE_CL`
         else
@@ -91,16 +89,16 @@ do
         fi
 
         if [[ -n "$WAP_CO_REQ_OLD" &&  $WAP_CO_REQ_OLD -lt $WAP_CO_REQ_CUR ]]
-        then 
+        then
         WAP_CO_REQ=`expr $WAP_CO_REQ_CUR - $WAP_CO_REQ_OLD`
-        else 
+        else
         WAP_CO_REQ=0
         fi
 
         if [[ -n "$WAP_CL_REQ_OLD" &&  $WAP_CL_REQ_OLD -lt $WAP_CL_REQ_CUR ]]
-        then 
+        then
         WAP_CL_REQ=`expr $WAP_CL_REQ_CUR - $WAP_CL_REQ_OLD`
-        else 
+        else
         WAP_CL_REQ=0
         fi
 
@@ -118,9 +116,9 @@ do
              PRSTAT_OUT=`prstat -p $WPPID 1 1 | grep "wapproxyd" | awk '{ print $1" "$9" "$3" "$4" "$5" "$10}'`
              PROXY_START=`echo "${WP_OUTPUT}" | grep "Proxy server start-up time" | cut -d " " -f 9,10`
        ACTIVE_PROXY_CONN=`echo "${WP_OUTPUT}" | grep "Active proxy" | cut -d "=" -f 2`
-       ACTIVE_PROXY_CONN=${ACTIVE_PROXY_CONN//" "/""} 
+       ACTIVE_PROXY_CONN=${ACTIVE_PROXY_CONN//" "/""}
        WEB_REQUESTS_COUNT=`echo "${WP_OUTPUT}" | grep "Pending proxy server web-requests" | cut -d "=" -f 2`
-       WEB_REQUESTS_COUNT=${WEB_REQUESTS_COUNT//" "/""} 
+       WEB_REQUESTS_COUNT=${WEB_REQUESTS_COUNT//" "/""}
 
             # some actions here ...
        RESULT_LINE="${RESULT_LINE} ${PRSTAT_OUT} ${PROXY_START} ${ACTIVE_PROXY_CONN} ${WEB_REQUESTS_COUNT} ${REAL_TPS}"
