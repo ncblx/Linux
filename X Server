@@ -1,0 +1,6 @@
+sudo yum -y install gnome-session xorg-x11-xauth xterm xauth xorg-x11-drivers xinetd xorg-x11-apps xorg-x11-utils libX11 xhost
+
+xauth list
+xhost
+echo $DISPLAY
+export DISPLAY=localhost:10.0
