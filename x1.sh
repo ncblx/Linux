@@ -1,3 +1,4 @@
+#!/bin/bash
 a=`date '+%m' --date '1 month ago'`
 zgrep "Status = Access-Accept" /var/log/radius/auth_log-2016$a* > /var/log/radius/w
 
