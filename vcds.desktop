@@ -1,0 +1,14 @@
+[Desktop Entry]
+Name=VCDS RUS
+Exec=env LANG=ru_RU.UTF-8 wine start /unix /home/ealiyev/.wine/drive_c/Ross-Tech/VCDS-RUS/VCDSLoader.exe 
+#Type=Application
+#StartupNotify=true
+#Path=/home/ealiyev/.wine/drive_c/Ross-Tech/VCDS-RUS
+Icon=5E63_VCDS.0
+#StartupWMClass=vcdsloader.exe
+#Terminal=false
+#Categories=Application
+Terminal=false
+Type=Application
+Categories=GNOME;Application;Development;
+StartupNotify=true
